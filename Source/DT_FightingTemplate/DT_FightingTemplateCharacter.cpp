@@ -55,6 +55,15 @@ void ADT_FightingTemplateCharacter::SetupPlayerInputComponent(class UInputCompon
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ADT_FightingTemplateCharacter::MoveRight);
 
+	PlayerInputComponent->BindAction("AttackA", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartAttackA);
+	// PlayerInputComponent->BindAction("AttackA", IE_Released, this, &ADT_FightingTemplateCharacter::StopAttackA);
+	PlayerInputComponent->BindAction("AttackB", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartAttackB);
+	// PlayerInputComponent->BindAction("AttackB", IE_Released, this, &ADT_FightingTemplateCharacter::StopAttackB);
+	PlayerInputComponent->BindAction("AttackC", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartAttackC);
+	// PlayerInputComponent->BindAction("AttackC", IE_Released, this, &ADT_FightingTemplateCharacter::StopAttackC);
+	PlayerInputComponent->BindAction("AttackD", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartAttackD);
+	// PlayerInputComponent->BindAction("AttackD", IE_Released, this, &ADT_FightingTemplateCharacter::StopAttackD);
+
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &ADT_FightingTemplateCharacter::TouchStarted);
 	PlayerInputComponent->BindTouch(IE_Released, this, &ADT_FightingTemplateCharacter::TouchStopped);
 }
@@ -76,3 +85,22 @@ void ADT_FightingTemplateCharacter::TouchStopped(const ETouchIndex::Type FingerI
 	StopJumping();
 }
 
+void ADT_FightingTemplateCharacter::StartAttackA()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Attack A called!"));
+}
+
+void ADT_FightingTemplateCharacter::StartAttackB()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Attack B called!"));
+}
+
+void ADT_FightingTemplateCharacter::StartAttackC()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Attack C called!"));
+}
+
+void ADT_FightingTemplateCharacter::StartAttackD()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Attack D called!"));
+}

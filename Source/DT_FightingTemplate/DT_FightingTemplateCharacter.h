@@ -19,6 +19,11 @@ class ADT_FightingTemplateCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
 
+	void StartAttackA();
+	void StartAttackB();
+	void StartAttackC();
+	void StartAttackD();
+
 protected:
 
 	/** Called for side to side input */
