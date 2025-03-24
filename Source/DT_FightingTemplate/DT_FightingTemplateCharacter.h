@@ -39,6 +39,12 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 	// End of APawn interface
 
+	// Damage the player!
+	void TakeDamage(float _damageAmount);
+
+	// The amount of health the player currently has.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health");
+	float playerHealth;
 
 public:
 	ADT_FightingTemplateCharacter();

@@ -41,6 +41,8 @@ ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 	GetCharacterMovement()->MaxWalkSpeed = 600.f;
 	GetCharacterMovement()->MaxFlySpeed = 600.f;
 
+	playerHealth = 1.00f;
+
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
@@ -103,4 +105,16 @@ void ADT_FightingTemplateCharacter::StartAttackC()
 void ADT_FightingTemplateCharacter::StartAttackD()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Attack D called!"));
+	TakeDamage(.05f);
+}
+
+void ADT_FightingTemplateCharacter::TakeDamage(float _damageAmount) 
+{
+	UE_LOG(LogTemp, Warning, TEXT("We are taking damage for %f points."), _damageAmount);
+	playerHealth -= _damageAmount;
+
+	if (playerHealth <= 0.0f) 
+	{
+		playerHealth = 0.0f;
+	}
 }
