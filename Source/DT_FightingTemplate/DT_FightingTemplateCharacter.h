@@ -42,6 +42,10 @@ protected:
 	// Damage the player!
 	void TakeDamage(float _damageAmount);
 
+	// Has the player pressed A (light jab)?
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks");
+	bool attackA_Used;
+
 	// The amount of health the player currently has.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health");
 	float playerHealth;

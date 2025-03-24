@@ -41,6 +41,7 @@ ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 	GetCharacterMovement()->MaxWalkSpeed = 600.f;
 	GetCharacterMovement()->MaxFlySpeed = 600.f;
 
+	attackA_Used = false;
 	playerHealth = 1.00f;
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
@@ -90,6 +91,7 @@ void ADT_FightingTemplateCharacter::TouchStopped(const ETouchIndex::Type FingerI
 void ADT_FightingTemplateCharacter::StartAttackA()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Attack A called!"));
+	attackA_Used = true;
 }
 
 void ADT_FightingTemplateCharacter::StartAttackB()
