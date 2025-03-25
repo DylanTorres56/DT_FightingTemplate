@@ -40,6 +40,7 @@ protected:
 	// End of APawn interface
 
 	// Damage the player!
+	UFUNCTION(BlueprintCallable)
 	void TakeDamage(float _damageAmount);
 
 	// Has the player pressed A (light jab)?
