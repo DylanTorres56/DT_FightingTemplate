@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "DT_FightingTemplateCharacter.h"
 #include "DT_FightingTemplateGameMode.generated.h"
 
 UCLASS(minimalapi)
@@ -13,6 +14,12 @@ class ADT_FightingTemplateGameMode : public AGameModeBase
 
 public:
 	ADT_FightingTemplateGameMode();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player References")
+	ADT_FightingTemplateCharacter* leftSidePlayer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player References")
+	ADT_FightingTemplateCharacter* rightSidePlayer;
 };
 
 
