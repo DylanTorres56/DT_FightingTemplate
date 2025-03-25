@@ -7,6 +7,13 @@
 #include "DT_FightingTemplateCharacter.h"
 #include "DT_FightingTemplateGameMode.generated.h"
 
+UENUM(BlueprintType)
+enum class ECharacterClass : uint8
+{
+	VE_Manny			UMETA(DisplayName = "Manny"),
+	VE_ShingoNGPC3D		UMETA(DisplayName = "Shingo (NGPC 3D)")
+};
+
 UCLASS(minimalapi)
 class ADT_FightingTemplateGameMode : public AGameModeBase
 {
