@@ -43,8 +43,8 @@ ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 
 	otherPlayer = nullptr;
 	hurtbox = nullptr;
-	transform = new FTransform(0.0f, 0.0f, 0.0f);
-	scale = new FVector(0.0f, 0.0f, 0.0f);
+	transform = FTransform();
+	scale = FVector(0.0f, 0.0f, 0.0f);
 	attackA_Used = false;
 	playerHealth = 1.00f;
 	isFlipped = false;
@@ -125,8 +125,3 @@ void ADT_FightingTemplateCharacter::TakeDamage(float _damageAmount)
 		playerHealth = 0.0f;
 	}
 }
-
-/*void ADT_FightingTemplateCharacter::OnMovementModeChanged()
-{
-
-}*/
