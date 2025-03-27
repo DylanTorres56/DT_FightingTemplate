@@ -41,6 +41,7 @@ ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 	GetCharacterMovement()->MaxWalkSpeed = 600.f;
 	GetCharacterMovement()->MaxFlySpeed = 600.f;
 
+	hurtbox = nullptr;
 	attackA_Used = false;
 	playerHealth = 1.00f;
 
