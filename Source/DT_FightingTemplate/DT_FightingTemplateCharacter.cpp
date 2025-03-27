@@ -32,7 +32,7 @@ ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 	SideViewCameraComponent->bUsePawnControlRotation = false; // We don't want the controller rotating the camera
 
 	// Configure character movement
-	GetCharacterMovement()->bOrientRotationToMovement = true; // Face in the direction we are moving..
+	GetCharacterMovement()->bOrientRotationToMovement = false; // Face in the direction we are moving..
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.0f, 0.0f); // ...at this rotation rate
 	GetCharacterMovement()->GravityScale = 2.f;
 	GetCharacterMovement()->AirControl = 0.80f;
@@ -41,9 +41,13 @@ ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 	GetCharacterMovement()->MaxWalkSpeed = 600.f;
 	GetCharacterMovement()->MaxFlySpeed = 600.f;
 
+	otherPlayer = nullptr;
 	hurtbox = nullptr;
+	transform = new FTransform(0.0f, 0.0f, 0.0f);
+	scale = new FVector(0.0f, 0.0f, 0.0f);
 	attackA_Used = false;
 	playerHealth = 1.00f;
+	isFlipped = false;
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
@@ -121,3 +125,8 @@ void ADT_FightingTemplateCharacter::TakeDamage(float _damageAmount)
 		playerHealth = 0.0f;
 	}
 }
+
+/*void ADT_FightingTemplateCharacter::OnMovementModeChanged()
+{
+
+}*/

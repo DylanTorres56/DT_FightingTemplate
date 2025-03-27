@@ -46,6 +46,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void TakeDamage(float _damageAmount);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player References")
+	ADT_FightingTemplateCharacter* otherPlayer;
+
 	// Has the player pressed A (light jab)?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks");
 	bool attackA_Used;
@@ -53,6 +56,18 @@ protected:
 	// The amount of health the player currently has.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health");
 	float playerHealth;
+
+	// Is the character's model currently flipped?
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Model");
+	bool isFlipped;
+
+	// Transform of the player.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Model");
+	FTransform transform;
+
+	// Scale vector of the player.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Model");
+	FVector scale;
 
 public:
 	ADT_FightingTemplateCharacter();
