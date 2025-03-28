@@ -17,6 +17,7 @@ ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
+	/*
 	// Create a camera boom attached to the root (capsule)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
@@ -30,6 +31,8 @@ ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 	SideViewCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("SideViewCamera"));
 	SideViewCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	SideViewCameraComponent->bUsePawnControlRotation = false; // We don't want the controller rotating the camera
+	*/
+
 
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = false; // Face in the direction we are moving..

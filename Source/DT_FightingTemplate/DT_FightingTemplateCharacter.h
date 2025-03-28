@@ -17,13 +17,13 @@ class ADT_FightingTemplateCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-	/** Side view camera */
+	/** Side view camera 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* SideViewCameraComponent;
 
-	/** Camera boom positioning the camera beside the character */
+	// Camera boom positioning the camera beside the character 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* CameraBoom;
+	class USpringArmComponent* CameraBoom; */
 
 	void StartAttackA();
 	void StartAttackB();
@@ -103,8 +103,8 @@ protected:
 public:
 	ADT_FightingTemplateCharacter();
 
-	/** Returns SideViewCameraComponent subobject **/
+	/* Returns SideViewCameraComponent subobject
 	FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }
-	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	// Returns CameraBoom subobject 
+	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; } */
 };
