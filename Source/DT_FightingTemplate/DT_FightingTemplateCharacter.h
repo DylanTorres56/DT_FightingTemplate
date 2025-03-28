@@ -5,7 +5,13 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "DT_FightingTemplateCharacter.generated.h"
-
+UENUM(BlueprintType)
+enum class EDirectionalInput : uint8 
+{
+	VE_Default			UMETA(DisplayName = "NEUTRAL"),
+	VE_MovingRight		UMETA(DisplayName = "MOVING_RIGHT"),
+	VE_MovingLeft		UMETA(DisplayName = "MOVING_LEFT")
+};
 UCLASS(config=Game)
 class ADT_FightingTemplateCharacter : public ACharacter
 {
@@ -39,6 +45,10 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 	// End of APawn interface
 
+	// Called every frame
+	virtual void Tick(float deltaTime) override;
+
+	// The hurtbox attached to the player.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox");
 	AActor* hurtbox;
 
@@ -46,15 +56,29 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void TakeDamage(float _damageAmount);
 
-	// Called every frame
-	virtual void Tick(float deltaTime) override;
-
+	// A reference to the other player.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player References")
 	ADT_FightingTemplateCharacter* otherPlayer;
 
-	// Has the player pressed A (light jab)?
+	// The direction the character is moving OR the direction the player is holding down (could also be neutral).
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement");
+	EDirectionalInput directionalInput;
+
+	// Has the player pressed A (Light Punch)?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks");
 	bool attackA_Used;
+
+	// Has the player pressed B (Light Kick)?
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks");
+	bool attackB_Used;
+
+	// Has the player pressed C (Heavy Punch)?
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks");
+	bool attackC_Used;
+
+	// Has the player pressed D (Heavy Kick)?
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks");
+	bool attackD_Used;
 
 	// The amount of health the player currently has.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health");

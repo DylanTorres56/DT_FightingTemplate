@@ -43,9 +43,13 @@ ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 
 	otherPlayer = nullptr;
 	hurtbox = nullptr;
+	directionalInput = EDirectionalInput::VE_Default;
 	transform = FTransform();
 	scale = FVector(0.0f, 0.0f, 0.0f);
 	attackA_Used = false;
+	attackB_Used = false;
+	attackC_Used = false;
+	attackD_Used = false;
 	playerHealth = 1.00f;
 	isFlipped = false;
 
@@ -78,6 +82,20 @@ void ADT_FightingTemplateCharacter::SetupPlayerInputComponent(class UInputCompon
 
 void ADT_FightingTemplateCharacter::MoveRight(float Value)
 {
+	UE_LOG(LogTemp, Warning, TEXT("The directional value is: %f"), Value);
+	if (Value > 0.20f) 
+	{
+		directionalInput = EDirectionalInput::VE_MovingRight;
+	}
+	else if (Value < -0.20f)
+	{
+		directionalInput = EDirectionalInput::VE_MovingLeft;
+	}
+	else 
+	{
+		directionalInput = EDirectionalInput::VE_Default;
+	}
+
 	// add movement in that direction
 	AddMovementInput(FVector(0.f,-1.f,0.f), Value);
 }
@@ -102,17 +120,19 @@ void ADT_FightingTemplateCharacter::StartAttackA()
 void ADT_FightingTemplateCharacter::StartAttackB()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Attack B called!"));
+	attackB_Used = true;
 }
 
 void ADT_FightingTemplateCharacter::StartAttackC()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Attack C called!"));
+	attackC_Used = true;
 }
 
 void ADT_FightingTemplateCharacter::StartAttackD()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Attack D called!"));
-	TakeDamage(.05f);
+	UE_LOG(LogTemp, Warning, TEXT("Attack D called!"));	
+	attackD_Used = true;
 }
 
 void ADT_FightingTemplateCharacter::TakeDamage(float _damageAmount) 
