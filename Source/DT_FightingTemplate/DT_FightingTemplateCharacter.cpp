@@ -52,6 +52,7 @@ ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 	attackD_Used = false;
 	playerHealth = 1.00f;
 	isFlipped = false;
+	hasLandedAttack = false;
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
@@ -139,26 +140,17 @@ void ADT_FightingTemplateCharacter::TakeDamage(float _damageAmount)
 {
 	UE_LOG(LogTemp, Warning, TEXT("We are taking damage for %f points."), _damageAmount);
 	playerHealth -= _damageAmount;
+	
+	if (otherPlayer) 
+	{
+		otherPlayer->hasLandedAttack = false;
+	}
 
 	if (playerHealth <= 0.0f) 
 	{
 		playerHealth = 0.0f;
 	}
 }
-
-
-/* // POTENTIAL SOLUTION A?
-void UCharacterMovementComponent::IsMovingOnGround() 
-{
-
-}
-
-// POTENTIAL SOLUTION B?
-void UCharacterMovementComponent::OnMovementModeChanged()
-{
-
-}*/
-
 
 // This is being called in tick FOR NOW. Go back and change it to when the player is grounded to allow for proper cross-ups!
 // Called once per frame.

@@ -49,7 +49,7 @@ protected:
 	virtual void Tick(float deltaTime) override;
 
 	// The hurtbox attached to the player.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox");
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	AActor* hurtbox;
 
 	// Damage the player!
@@ -61,40 +61,44 @@ protected:
 	ADT_FightingTemplateCharacter* otherPlayer;
 
 	// The direction the character is moving OR the direction the player is holding down (could also be neutral).
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement");
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	EDirectionalInput directionalInput;
 
 	// Has the player pressed A (Light Punch)?
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks");
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks")
 	bool attackA_Used;
 
 	// Has the player pressed B (Light Kick)?
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks");
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks")
 	bool attackB_Used;
 
 	// Has the player pressed C (Heavy Punch)?
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks");
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks")
 	bool attackC_Used;
 
 	// Has the player pressed D (Heavy Kick)?
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks");
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks")
 	bool attackD_Used;
 
 	// The amount of health the player currently has.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health");
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float playerHealth;
 
 	// Is the character's model currently flipped?
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Model");
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Model")
 	bool isFlipped;
 
 	// Transform of the player.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Model");
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Model")
 	FTransform transform;
 
 	// Scale vector of the player.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Model");
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Model")
 	FVector scale;
+
+	// Has the player's last attack conneected?
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks")
+	bool hasLandedAttack;
 
 public:
 	ADT_FightingTemplateCharacter();
