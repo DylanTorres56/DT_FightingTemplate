@@ -46,6 +46,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void TakeDamage(float _damageAmount);
 
+	// Called every frame
+	virtual void Tick(float deltaTime) override;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player References")
 	ADT_FightingTemplateCharacter* otherPlayer;
 

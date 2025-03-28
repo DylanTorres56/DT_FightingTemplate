@@ -125,3 +125,65 @@ void ADT_FightingTemplateCharacter::TakeDamage(float _damageAmount)
 		playerHealth = 0.0f;
 	}
 }
+
+
+/* // POTENTIAL SOLUTION A?
+void UCharacterMovementComponent::IsMovingOnGround() 
+{
+
+}
+
+// POTENTIAL SOLUTION B?
+void UCharacterMovementComponent::OnMovementModeChanged()
+{
+
+}*/
+
+
+// This is being called in tick FOR NOW. Go back and change it to when the player is grounded to allow for proper cross-ups!
+// Called once per frame.
+void ADT_FightingTemplateCharacter::Tick(float deltaTime) 
+{
+	Super::Tick(deltaTime);
+
+	if (otherPlayer) 
+	{
+		if (auto characterMovement = GetCharacterMovement()) 
+		{
+			if (auto enemyMovement = otherPlayer->GetCharacterMovement()) 
+			{
+				if (enemyMovement->GetActorLocation().Y >= characterMovement->GetActorLocation().Y) 
+				{
+					if (isFlipped) 
+					{
+						if (auto mesh = GetCapsuleComponent()->GetChildComponent(1)) 
+						{
+							transform = mesh->GetRelativeTransform();
+							scale = transform.GetScale3D();
+							scale.Y = -1;
+							transform.SetScale3D(scale);
+							mesh->SetRelativeTransform(transform);
+						}
+						isFlipped = false;
+					}
+				}
+				else 
+				{
+					if (!isFlipped)
+					{
+						if (auto mesh = GetCapsuleComponent()->GetChildComponent(1))
+						{
+							transform = mesh->GetRelativeTransform();
+							scale = transform.GetScale3D();
+							scale.Y = 1;
+							transform.SetScale3D(scale);
+							mesh->SetRelativeTransform(transform);
+						}
+						isFlipped = true;
+					}
+				}
+
+			}
+		}
+	}
+}
