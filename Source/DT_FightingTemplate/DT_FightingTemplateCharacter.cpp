@@ -6,6 +6,7 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "DT_FightingTemplateGameMode.h"
 
 ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 {
@@ -49,12 +50,12 @@ ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 
 void ADT_FightingTemplateCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
-	/*if (auto gameMode = Cast<ADT_FightingTemplateGameMode>(GetWorld()->GetAuthGameMode()))
+	if (auto gameMode = Cast<ADT_FightingTemplateGameMode>(GetWorld()->GetAuthGameMode()))
 	{
 		
-		TO DO: FIGURE OUT WHAT TO PUT IN THE HEADER TO MAKE THIS WORK!
+		//TO DO: FIGURE OUT WHAT TO PUT IN THE HEADER TO MAKE THIS WORK!
 
-	}*/
+	}
 
 
 	// set up gameplay key bindings
