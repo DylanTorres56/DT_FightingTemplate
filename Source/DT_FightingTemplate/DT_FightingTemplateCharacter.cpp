@@ -51,6 +51,8 @@ void ADT_FightingTemplateCharacter::SetupPlayerInputComponent(class UInputCompon
 {
 	/*if (auto gameMode = Cast<ADT_FightingTemplateGameMode>(GetWorld()->GetAuthGameMode()))
 	{
+		
+		TO DO: FIGURE OUT WHAT TO PUT IN THE HEADER TO MAKE THIS WORK!
 
 	}*/
 
@@ -166,7 +168,6 @@ void ADT_FightingTemplateCharacter::P2_StopJumping()
 
 void ADT_FightingTemplateCharacter::P2_MoveRight(float _value)
 {
-	// UE_LOG(LogTemp, Warning, TEXT("Attack D called!"));	
 	MoveRight(_value);
 }
 

@@ -87,6 +87,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	EDirectionalInput directionalInput;
 
+	// Is the player currently able to move?
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	bool canMove;
+
 	// Has the player pressed A (Light Punch)?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks")
 	bool attackA_Used;
@@ -119,9 +123,14 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Model")
 	FVector scale;
 
-	// Has the player's last attack conneected?
+	// Has the player's last attack connected?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks")
 	bool hasLandedAttack;
+
+	// Does this device support multiple players at once?
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Controller")
+	bool doesDeviceSupportMultiplePlayers;
+
 
 public:
 	ADT_FightingTemplateCharacter();
