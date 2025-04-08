@@ -17,23 +17,6 @@ ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
-	/*
-	// Create a camera boom attached to the root (capsule)
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->SetUsingAbsoluteRotation(true); // Rotation of the character should not affect rotation of boom
-	CameraBoom->bDoCollisionTest = false;
-	CameraBoom->TargetArmLength = 500.f;
-	CameraBoom->SocketOffset = FVector(0.f,0.f,75.f);
-	CameraBoom->SetRelativeRotation(FRotator(0.f,180.f,0.f));
-
-	// Create a camera and attach to boom
-	SideViewCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("SideViewCamera"));
-	SideViewCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
-	SideViewCameraComponent->bUsePawnControlRotation = false; // We don't want the controller rotating the camera
-	*/
-
-
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = false; // Face in the direction we are moving..
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.0f, 0.0f); // ...at this rotation rate
@@ -66,19 +49,25 @@ ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 
 void ADT_FightingTemplateCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
-	// set up gameplay key bindings
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-	PlayerInputComponent->BindAxis("MoveRight", this, &ADT_FightingTemplateCharacter::MoveRight);
+	/*if (auto gameMode = Cast<ADT_FightingTemplateGameMode>(GetWorld()->GetAuthGameMode()))
+	{
 
-	PlayerInputComponent->BindAction("AttackA", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartAttackA);
-	// PlayerInputComponent->BindAction("AttackA", IE_Released, this, &ADT_FightingTemplateCharacter::StopAttackA);
-	PlayerInputComponent->BindAction("AttackB", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartAttackB);
-	// PlayerInputComponent->BindAction("AttackB", IE_Released, this, &ADT_FightingTemplateCharacter::StopAttackB);
-	PlayerInputComponent->BindAction("AttackC", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartAttackC);
-	// PlayerInputComponent->BindAction("AttackC", IE_Released, this, &ADT_FightingTemplateCharacter::StopAttackC);
-	PlayerInputComponent->BindAction("AttackD", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartAttackD);
-	// PlayerInputComponent->BindAction("AttackD", IE_Released, this, &ADT_FightingTemplateCharacter::StopAttackD);
+	}*/
+
+
+	// set up gameplay key bindings
+	PlayerInputComponent->BindAction("P1_Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("P1_Jump", IE_Released, this, &ACharacter::StopJumping);
+	PlayerInputComponent->BindAxis("P1_MoveRight", this, &ADT_FightingTemplateCharacter::MoveRight);
+
+	PlayerInputComponent->BindAction("P1_AttackA", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartAttackA);
+	// PlayerInputComponent->BindAction("P1_AttackA", IE_Released, this, &ADT_FightingTemplateCharacter::StopAttackA);
+	PlayerInputComponent->BindAction("P1_AttackB", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartAttackB);
+	// PlayerInputComponent->BindAction("P1_AttackB", IE_Released, this, &ADT_FightingTemplateCharacter::StopAttackB);
+	PlayerInputComponent->BindAction("P1_AttackC", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartAttackC);
+	// PlayerInputComponent->BindAction("P1_AttackC", IE_Released, this, &ADT_FightingTemplateCharacter::StopAttackC);
+	PlayerInputComponent->BindAction("P1_AttackD", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartAttackD);
+	// PlayerInputComponent->BindAction("P1_AttackD", IE_Released, this, &ADT_FightingTemplateCharacter::StopAttackD);
 
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &ADT_FightingTemplateCharacter::TouchStarted);
 	PlayerInputComponent->BindTouch(IE_Released, this, &ADT_FightingTemplateCharacter::TouchStopped);
@@ -117,26 +106,68 @@ void ADT_FightingTemplateCharacter::TouchStopped(const ETouchIndex::Type FingerI
 
 void ADT_FightingTemplateCharacter::StartAttackA()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Attack A called!"));
+	// UE_LOG(LogTemp, Warning, TEXT("Attack A called!"));
 	attackA_Used = true;
 }
 
 void ADT_FightingTemplateCharacter::StartAttackB()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Attack B called!"));
+	// UE_LOG(LogTemp, Warning, TEXT("Attack B called!"));
 	attackB_Used = true;
 }
 
 void ADT_FightingTemplateCharacter::StartAttackC()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Attack C called!"));
+	// UE_LOG(LogTemp, Warning, TEXT("Attack C called!"));
 	attackC_Used = true;
 }
 
 void ADT_FightingTemplateCharacter::StartAttackD()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Attack D called!"));	
+	// UE_LOG(LogTemp, Warning, TEXT("Attack D called!"));	
 	attackD_Used = true;
+}
+
+// P2 Functions (On Keyboard!)
+
+void ADT_FightingTemplateCharacter::P2_StartAttackA()
+{
+	// UE_LOG(LogTemp, Warning, TEXT("Attack A called!"));	
+	StartAttackA();
+}
+
+void ADT_FightingTemplateCharacter::P2_StartAttackB()
+{
+	// UE_LOG(LogTemp, Warning, TEXT("Attack B called!"));	
+	StartAttackB();
+}
+
+void ADT_FightingTemplateCharacter::P2_StartAttackC()
+{
+	// UE_LOG(LogTemp, Warning, TEXT("Attack C called!"));	
+	StartAttackC();
+}
+
+void ADT_FightingTemplateCharacter::P2_StartAttackD()
+{
+	// UE_LOG(LogTemp, Warning, TEXT("Attack D called!"));	
+	StartAttackD();
+}
+
+void ADT_FightingTemplateCharacter::P2_Jump()
+{	
+	Jump();
+}
+
+void ADT_FightingTemplateCharacter::P2_StopJumping()
+{
+	StopJumping();
+}
+
+void ADT_FightingTemplateCharacter::P2_MoveRight(float _value)
+{
+	// UE_LOG(LogTemp, Warning, TEXT("Attack D called!"));	
+	MoveRight(_value);
 }
 
 void ADT_FightingTemplateCharacter::TakeDamage(float _damageAmount) 
