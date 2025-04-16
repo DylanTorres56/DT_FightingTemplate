@@ -111,6 +111,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float playerHealth;
 
+	// The maximum amount of distance that can separate players.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	float maxDistanceApart;
+
 	// Is the character's model currently flipped?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Model")
 	bool isFlipped;

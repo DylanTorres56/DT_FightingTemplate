@@ -38,6 +38,7 @@ ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 	attackC_Used = false;
 	attackD_Used = false;
 	playerHealth = 1.00f;
+	maxDistanceApart = 800.0f;
 	isFlipped = false;
 	hasLandedAttack = false;
 
@@ -114,8 +115,22 @@ void ADT_FightingTemplateCharacter::MoveRight(float Value)
 		directionalInput = EDirectionalInput::VE_Default;
 	}
 
-	// add movement in that direction
-	AddMovementInput(FVector(0.f,-1.f,0.f), Value);
+	float currentDistanceApart = abs(otherPlayer->GetActorLocation().Y - GetActorLocation().Y);
+
+	if(currentDistanceApart >= maxDistanceApart)
+	{
+		if ((currentDistanceApart + Value < currentDistanceApart && !isFlipped) || (currentDistanceApart - Value < currentDistanceApart && isFlipped))
+		{
+			// add movement in that direction
+			AddMovementInput(FVector(0.f,-1.f,0.f), Value);
+		}
+	}
+	else 
+	{
+
+	}
+
+	
 }
 
 void ADT_FightingTemplateCharacter::TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location)
