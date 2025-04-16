@@ -127,7 +127,8 @@ void ADT_FightingTemplateCharacter::MoveRight(float Value)
 	}
 	else 
 	{
-
+		// add movement in that direction
+		AddMovementInput(FVector(0.f, -1.f, 0.f), Value);
 	}
 
 	
