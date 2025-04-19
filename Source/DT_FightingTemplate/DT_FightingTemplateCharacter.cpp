@@ -122,13 +122,13 @@ void ADT_FightingTemplateCharacter::MoveRight(float Value)
 		if ((currentDistanceApart + Value < currentDistanceApart && !isFlipped) || (currentDistanceApart - Value < currentDistanceApart && isFlipped))
 		{
 			// add movement in that direction
-			AddMovementInput(FVector(0.f,-1.f,0.f), Value);
+			AddMovementInput(FVector(0.0f, 1.0f, 0.0f), Value);
 		}
 	}
 	else 
 	{
 		// add movement in that direction
-		AddMovementInput(FVector(0.f, -1.f, 0.f), Value);
+		AddMovementInput(FVector(0.0f, 1.0f, 0.0f), Value);
 	}
 
 	
@@ -238,7 +238,7 @@ void ADT_FightingTemplateCharacter::Tick(float deltaTime)
 		{
 			if (auto enemyMovement = otherPlayer->GetCharacterMovement()) 
 			{
-				if (enemyMovement->GetActorLocation().Y >= characterMovement->GetActorLocation().Y) 
+				if (enemyMovement->GetActorLocation().Y <= characterMovement->GetActorLocation().Y)
 				{
 					if (isFlipped) 
 					{
