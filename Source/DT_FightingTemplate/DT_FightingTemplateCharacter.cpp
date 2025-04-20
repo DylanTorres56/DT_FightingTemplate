@@ -39,7 +39,7 @@ ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 	attackD_Used = false;
 	playerHealth = 1.00f;
 	maxDistanceApart = 800.0f;
-	isFlipped = false;
+	isFacingRight = false;
 	hasLandedAttack = false;
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
@@ -159,7 +159,7 @@ void ADT_FightingTemplateCharacter::MoveRight(float Value)
 	
 		if(currentDistanceApart >= maxDistanceApart)
 		{
-			if ((currentDistanceApart + Value < currentDistanceApart && !isFlipped) || (currentDistanceApart - Value < currentDistanceApart && isFlipped))
+			if ((currentDistanceApart + Value < currentDistanceApart && !isFacingRight) || (currentDistanceApart - Value < currentDistanceApart && isFacingRight))
 				{
 					// add movement in that direction
 					AddMovementInput(FVector(0.0f, 1.0f, 0.0f), Value);
@@ -278,26 +278,11 @@ void ADT_FightingTemplateCharacter::Tick(float deltaTime)
 		{
 			if (auto enemyMovement = otherPlayer->GetCharacterMovement()) 
 			{
-				if (enemyMovement->GetActorLocation().Y <= characterMovement->GetActorLocation().Y)
+				if (enemyMovement->GetActorLocation().Y >= characterMovement->GetActorLocation().Y)
 				{
-					if (isFlipped) 
+					if (!isFacingRight) 
 					{
 						if (auto mesh = GetCapsuleComponent()->GetChildComponent(1)) 
-						{
-							transform = mesh->GetRelativeTransform();
-							scale = transform.GetScale3D();
-							scale.Y = -1;
-							transform.SetScale3D(scale);
-							mesh->SetRelativeTransform(transform);
-						}
-						isFlipped = false;
-					}
-				}
-				else 
-				{
-					if (!isFlipped)
-					{
-						if (auto mesh = GetCapsuleComponent()->GetChildComponent(1))
 						{
 							transform = mesh->GetRelativeTransform();
 							scale = transform.GetScale3D();
@@ -305,7 +290,22 @@ void ADT_FightingTemplateCharacter::Tick(float deltaTime)
 							transform.SetScale3D(scale);
 							mesh->SetRelativeTransform(transform);
 						}
-						isFlipped = true;
+						isFacingRight = true;
+					}
+				}
+				else 
+				{
+					if (isFacingRight)
+					{
+						if (auto mesh = GetCapsuleComponent()->GetChildComponent(1))
+						{
+							transform = mesh->GetRelativeTransform();
+							scale = transform.GetScale3D();
+							scale.Y = -1;
+							transform.SetScale3D(scale);
+							mesh->SetRelativeTransform(transform);
+						}
+						isFacingRight = false;
 					}
 				}
 

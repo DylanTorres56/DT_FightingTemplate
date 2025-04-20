@@ -135,7 +135,7 @@ protected:
 
 	// Is the character's model currently flipped?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Model")
-	bool isFlipped;
+	bool isFacingRight;
 
 	// Transform of the player.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Model")
