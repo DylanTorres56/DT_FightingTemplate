@@ -100,8 +100,6 @@ void ADT_FightingTemplateCharacter::SetupPlayerInputComponent(class UInputCompon
 			PlayerInputComponent->BindTouch(IE_Released, this, &ADT_FightingTemplateCharacter::TouchStopped);
 		}
 	}
-
-
 	
 }
 
@@ -272,43 +270,47 @@ void ADT_FightingTemplateCharacter::Tick(float deltaTime)
 {
 	Super::Tick(deltaTime);
 
-	if (otherPlayer) 
+	if (directionalInput != EDirectionalInput::VE_Jumping) 
 	{
-		if (auto characterMovement = GetCharacterMovement()) 
+	
+		if (otherPlayer) 
 		{
-			if (auto enemyMovement = otherPlayer->GetCharacterMovement()) 
+			if (auto characterMovement = GetCharacterMovement()) 
 			{
-				if (enemyMovement->GetActorLocation().Y >= characterMovement->GetActorLocation().Y)
+				if (auto enemyMovement = otherPlayer->GetCharacterMovement()) 
 				{
-					if (!isFacingRight) 
+					if (enemyMovement->GetActorLocation().Y >= characterMovement->GetActorLocation().Y)
 					{
-						if (auto mesh = GetCapsuleComponent()->GetChildComponent(1)) 
+						if (!isFacingRight) 
 						{
-							transform = mesh->GetRelativeTransform();
-							scale = transform.GetScale3D();
-							scale.Y = 1;
-							transform.SetScale3D(scale);
-							mesh->SetRelativeTransform(transform);
+							if (auto mesh = GetCapsuleComponent()->GetChildComponent(1)) 
+							{
+								transform = mesh->GetRelativeTransform();
+								scale = transform.GetScale3D();
+								scale.Y = 1;
+								transform.SetScale3D(scale);
+								mesh->SetRelativeTransform(transform);
+							}
+							isFacingRight = true;
 						}
-						isFacingRight = true;
 					}
-				}
-				else 
-				{
-					if (isFacingRight)
+					else 
 					{
-						if (auto mesh = GetCapsuleComponent()->GetChildComponent(1))
+						if (isFacingRight)
 						{
-							transform = mesh->GetRelativeTransform();
-							scale = transform.GetScale3D();
-							scale.Y = -1;
-							transform.SetScale3D(scale);
-							mesh->SetRelativeTransform(transform);
+							if (auto mesh = GetCapsuleComponent()->GetChildComponent(1))
+							{
+								transform = mesh->GetRelativeTransform();
+								scale = transform.GetScale3D();
+								scale.Y = -1;
+								transform.SetScale3D(scale);
+								mesh->SetRelativeTransform(transform);
+							}
+							isFacingRight = false;
 						}
-						isFacingRight = false;
 					}
+	
 				}
-
 			}
 		}
 	}
