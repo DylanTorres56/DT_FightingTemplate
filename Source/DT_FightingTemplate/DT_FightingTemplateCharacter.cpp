@@ -57,8 +57,11 @@ void ADT_FightingTemplateCharacter::SetupPlayerInputComponent(class UInputCompon
 		{
 			UE_LOG(LogTemp, Warning, TEXT("The left side player has bound their controls."));
 			// set up gameplay key bindings
-			PlayerInputComponent->BindAction("P1_Jump", IE_Pressed, this, &ACharacter::Jump);
-			PlayerInputComponent->BindAction("P1_Jump", IE_Released, this, &ACharacter::StopJumping);
+			PlayerInputComponent->BindAction("P1_Jump", IE_Pressed, this, &ADT_FightingTemplateCharacter::Jump);
+			PlayerInputComponent->BindAction("P1_Jump", IE_Released, this, &ADT_FightingTemplateCharacter::StopJumping);
+			PlayerInputComponent->BindAction("P1_Jump", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartCrouching);
+			PlayerInputComponent->BindAction("P1_Jump", IE_Released, this, &ADT_FightingTemplateCharacter::StopCrouching);
+
 			PlayerInputComponent->BindAxis("P1_MoveRight", this, &ADT_FightingTemplateCharacter::MoveRight);
 
 			PlayerInputComponent->BindAction("P1_AttackA", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartAttackA);
@@ -73,12 +76,15 @@ void ADT_FightingTemplateCharacter::SetupPlayerInputComponent(class UInputCompon
 			PlayerInputComponent->BindTouch(IE_Pressed, this, &ADT_FightingTemplateCharacter::TouchStarted);
 			PlayerInputComponent->BindTouch(IE_Released, this, &ADT_FightingTemplateCharacter::TouchStopped);
 		}
-		else 
+		else
 		{
 			UE_LOG(LogTemp, Warning, TEXT("The right side player has bound their controls."));
 			// set up gameplay key bindings
-			PlayerInputComponent->BindAction("P2_Jump", IE_Pressed, this, &ACharacter::Jump);
-			PlayerInputComponent->BindAction("P2_Jump", IE_Released, this, &ACharacter::StopJumping);
+			PlayerInputComponent->BindAction("P2_Jump", IE_Pressed, this, &ADT_FightingTemplateCharacter::Jump);
+			PlayerInputComponent->BindAction("P2_Jump", IE_Released, this, &ADT_FightingTemplateCharacter::StopJumping);
+			PlayerInputComponent->BindAction("P1_Jump", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartCrouching);
+			PlayerInputComponent->BindAction("P1_Jump", IE_Released, this, &ADT_FightingTemplateCharacter::StopCrouching);
+
 			PlayerInputComponent->BindAxis("P2_MoveRight", this, &ADT_FightingTemplateCharacter::MoveRight);
 
 			PlayerInputComponent->BindAction("P2_AttackA", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartAttackA);
@@ -99,39 +105,73 @@ void ADT_FightingTemplateCharacter::SetupPlayerInputComponent(class UInputCompon
 	
 }
 
+void ADT_FightingTemplateCharacter::Jump()
+{
+	ACharacter::Jump();
+	directionalInput = EDirectionalInput::VE_Jumping;
+}
+
+void ADT_FightingTemplateCharacter::StopJumping()
+{
+	ACharacter::StopJumping();
+}
+
+void ADT_FightingTemplateCharacter::Landed(const FHitResult& Hit) 
+{
+	ACharacter::Landed(Hit);
+	directionalInput = EDirectionalInput::VE_Default;
+}
+
+void ADT_FightingTemplateCharacter::StartCrouching()
+{
+	isCrouching = true;
+}
+
+void ADT_FightingTemplateCharacter::StopCrouching()
+{
+	isCrouching = false;
+}
+
 void ADT_FightingTemplateCharacter::MoveRight(float Value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("The directional value is: %f"), Value);
-	if (Value > 0.20f) 
+	if(canMove && !isCrouching)
 	{
-		directionalInput = EDirectionalInput::VE_MovingRight;
-	}
-	else if (Value < -0.20f)
-	{
-		directionalInput = EDirectionalInput::VE_MovingLeft;
-	}
-	else 
-	{
-		directionalInput = EDirectionalInput::VE_Default;
-	}
 
-	float currentDistanceApart = abs(otherPlayer->GetActorLocation().Y - GetActorLocation().Y);
+		UE_LOG(LogTemp, Warning, TEXT("The directional value is: %f"), Value);
+		
+		if (directionalInput != EDirectionalInput::VE_Jumping)
+		{		
+			if (Value > 0.20f) 
+			{
+				directionalInput = EDirectionalInput::VE_MovingRight;
+			}
+			else if (Value < -0.20f)
+			{
+				directionalInput = EDirectionalInput::VE_MovingLeft;
+			}
+			else 
+			{
+				directionalInput = EDirectionalInput::VE_Default;
+			}
+		}
 
-	if(currentDistanceApart >= maxDistanceApart)
-	{
-		if ((currentDistanceApart + Value < currentDistanceApart && !isFlipped) || (currentDistanceApart - Value < currentDistanceApart && isFlipped))
+		float currentDistanceApart = abs(otherPlayer->GetActorLocation().Y - GetActorLocation().Y);
+	
+		if(currentDistanceApart >= maxDistanceApart)
+		{
+			if ((currentDistanceApart + Value < currentDistanceApart && !isFlipped) || (currentDistanceApart - Value < currentDistanceApart && isFlipped))
+				{
+					// add movement in that direction
+					AddMovementInput(FVector(0.0f, 1.0f, 0.0f), Value);
+				}
+		}
+		else 
 		{
 			// add movement in that direction
 			AddMovementInput(FVector(0.0f, 1.0f, 0.0f), Value);
 		}
 	}
-	else 
-	{
-		// add movement in that direction
-		AddMovementInput(FVector(0.0f, 1.0f, 0.0f), Value);
-	}
 
-	
 }
 
 void ADT_FightingTemplateCharacter::TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location)

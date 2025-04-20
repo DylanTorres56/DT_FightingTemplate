@@ -10,7 +10,8 @@ enum class EDirectionalInput : uint8
 {
 	VE_Default			UMETA(DisplayName = "NEUTRAL"),
 	VE_MovingRight		UMETA(DisplayName = "MOVING_RIGHT"),
-	VE_MovingLeft		UMETA(DisplayName = "MOVING_LEFT")
+	VE_MovingLeft		UMETA(DisplayName = "MOVING_LEFT"),
+	VE_Jumping			UMETA(DisplayName = "JUMPING")
 };
 UCLASS(config=Game)
 class ADT_FightingTemplateCharacter : public ACharacter
@@ -71,6 +72,19 @@ protected:
 	// Called every frame
 	virtual void Tick(float deltaTime) override;
 
+	// Override the jump functions in ACharacter/APawn to refine jump and landing logic.
+	virtual void Jump() override;
+	virtual void StopJumping() override;
+	virtual void Landed(const FHitResult& Hit) override;
+
+	// Character begins crouching.
+	UFUNCTION(BlueprintCallable)
+	void StartCrouching();
+
+	// Character ends crouching.
+	UFUNCTION(BlueprintCallable)
+	void StopCrouching();
+
 	// The hurtbox attached to the player.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	AActor* hurtbox;
@@ -90,6 +104,10 @@ protected:
 	// Is the player currently able to move?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	bool canMove;
+
+	// Is the player currently crouching?
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	bool isCrouching;
 
 	// Has the player pressed A (Light Punch)?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks")
