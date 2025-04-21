@@ -30,13 +30,14 @@ ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 
 	otherPlayer = nullptr;
 	hurtbox = nullptr;
-	directionalInput = EDirectionalInput::VE_Default;
+	characterState = ECharacterState::VE_Default;
 	transform = FTransform();
 	scale = FVector(0.0f, 0.0f, 0.0f);
 	attackA_Used = false;
 	attackB_Used = false;
 	attackC_Used = false;
 	attackD_Used = false;
+	stunTime = 0.0f;
 	playerHealth = 1.00f;
 	maxDistanceApart = 800.0f;
 	isFacingRight = false;
@@ -59,8 +60,8 @@ void ADT_FightingTemplateCharacter::SetupPlayerInputComponent(class UInputCompon
 			// set up gameplay key bindings
 			PlayerInputComponent->BindAction("P1_Jump", IE_Pressed, this, &ADT_FightingTemplateCharacter::Jump);
 			PlayerInputComponent->BindAction("P1_Jump", IE_Released, this, &ADT_FightingTemplateCharacter::StopJumping);
-			PlayerInputComponent->BindAction("P1_Jump", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartCrouching);
-			PlayerInputComponent->BindAction("P1_Jump", IE_Released, this, &ADT_FightingTemplateCharacter::StopCrouching);
+			PlayerInputComponent->BindAction("P1_Crouch", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartCrouching);
+			PlayerInputComponent->BindAction("P1_Crouch", IE_Released, this, &ADT_FightingTemplateCharacter::StopCrouching);
 
 			PlayerInputComponent->BindAxis("P1_MoveRight", this, &ADT_FightingTemplateCharacter::MoveRight);
 
@@ -82,8 +83,8 @@ void ADT_FightingTemplateCharacter::SetupPlayerInputComponent(class UInputCompon
 			// set up gameplay key bindings
 			PlayerInputComponent->BindAction("P2_Jump", IE_Pressed, this, &ADT_FightingTemplateCharacter::Jump);
 			PlayerInputComponent->BindAction("P2_Jump", IE_Released, this, &ADT_FightingTemplateCharacter::StopJumping);
-			PlayerInputComponent->BindAction("P1_Jump", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartCrouching);
-			PlayerInputComponent->BindAction("P1_Jump", IE_Released, this, &ADT_FightingTemplateCharacter::StopCrouching);
+			PlayerInputComponent->BindAction("P2_Crouch", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartCrouching);
+			PlayerInputComponent->BindAction("P2_Crouch", IE_Released, this, &ADT_FightingTemplateCharacter::StopCrouching);
 
 			PlayerInputComponent->BindAxis("P2_MoveRight", this, &ADT_FightingTemplateCharacter::MoveRight);
 
@@ -106,7 +107,7 @@ void ADT_FightingTemplateCharacter::SetupPlayerInputComponent(class UInputCompon
 void ADT_FightingTemplateCharacter::Jump()
 {
 	ACharacter::Jump();
-	directionalInput = EDirectionalInput::VE_Jumping;
+	characterState = ECharacterState::VE_Jumping;
 }
 
 void ADT_FightingTemplateCharacter::StopJumping()
@@ -117,7 +118,7 @@ void ADT_FightingTemplateCharacter::StopJumping()
 void ADT_FightingTemplateCharacter::Landed(const FHitResult& Hit) 
 {
 	ACharacter::Landed(Hit);
-	directionalInput = EDirectionalInput::VE_Default;
+	characterState = ECharacterState::VE_Default;
 }
 
 void ADT_FightingTemplateCharacter::StartCrouching()
@@ -137,19 +138,19 @@ void ADT_FightingTemplateCharacter::MoveRight(float Value)
 
 		UE_LOG(LogTemp, Warning, TEXT("The directional value is: %f"), Value);
 		
-		if (directionalInput != EDirectionalInput::VE_Jumping)
+		if (characterState != ECharacterState::VE_Jumping)
 		{		
 			if (Value > 0.20f) 
 			{
-				directionalInput = EDirectionalInput::VE_MovingRight;
+				characterState = ECharacterState::VE_MovingRight;
 			}
 			else if (Value < -0.20f)
 			{
-				directionalInput = EDirectionalInput::VE_MovingLeft;
+				characterState = ECharacterState::VE_MovingLeft;
 			}
 			else 
 			{
-				directionalInput = EDirectionalInput::VE_Default;
+				characterState = ECharacterState::VE_Default;
 			}
 		}
 
@@ -248,11 +249,15 @@ void ADT_FightingTemplateCharacter::P2_MoveRight(float _value)
 	MoveRight(_value);
 }
 
-void ADT_FightingTemplateCharacter::TakeDamage(float _damageAmount) 
+void ADT_FightingTemplateCharacter::TakeDamage(float _damageAmount, float _hitstunTime) 
 {
 	UE_LOG(LogTemp, Warning, TEXT("We are taking damage for %f points."), _damageAmount);
 	playerHealth -= _damageAmount;
 	
+	characterState = ECharacterState::VE_Stunned;
+	stunTime = _hitstunTime;
+	BeginStun();
+
 	if (otherPlayer) 
 	{
 		otherPlayer->hasLandedAttack = false;
@@ -264,13 +269,25 @@ void ADT_FightingTemplateCharacter::TakeDamage(float _damageAmount)
 	}
 }
 
+void ADT_FightingTemplateCharacter::BeginStun() 
+{
+	canMove = true;
+	GetWorld()->GetTimerManager().SetTimer(stunTimerHandle, this, &ADT_FightingTemplateCharacter::EndStun, stunTime, false);
+}
+
+void ADT_FightingTemplateCharacter::EndStun()
+{
+	characterState = ECharacterState::VE_Default;
+	canMove = false;
+}
+
 // This is being called in tick FOR NOW. Go back and change it to when the player is grounded to allow for proper cross-ups!
 // Called once per frame.
 void ADT_FightingTemplateCharacter::Tick(float deltaTime) 
 {
 	Super::Tick(deltaTime);
 
-	if (directionalInput != EDirectionalInput::VE_Jumping) 
+	if (characterState != ECharacterState::VE_Jumping) 
 	{
 	
 		if (otherPlayer) 

@@ -6,12 +6,14 @@
 #include "GameFramework/Character.h"
 #include "DT_FightingTemplateCharacter.generated.h"
 UENUM(BlueprintType)
-enum class EDirectionalInput : uint8 
+enum class ECharacterState : uint8 
 {
 	VE_Default			UMETA(DisplayName = "NEUTRAL"),
 	VE_MovingRight		UMETA(DisplayName = "MOVING_RIGHT"),
 	VE_MovingLeft		UMETA(DisplayName = "MOVING_LEFT"),
-	VE_Jumping			UMETA(DisplayName = "JUMPING")
+	VE_Jumping			UMETA(DisplayName = "JUMPING"),
+	VE_Stunned			UMETA(DisplayName = "STUNNED"),
+	VE_Blocking			UMETA(DisplayName = "BLOCKING")
 };
 UCLASS(config=Game)
 class ADT_FightingTemplateCharacter : public ACharacter
@@ -91,7 +93,20 @@ protected:
 
 	// Damage the player!
 	UFUNCTION(BlueprintCallable)
-	void TakeDamage(float _damageAmount);
+	void TakeDamage(float _damageAmount, float _stunTime);
+
+	// Stun state begins!
+	void BeginStun();
+
+	// Stun state ends!
+	void EndStun();
+
+	// The amount of time a character is stunned for.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float stunTime;
+
+	// The timer handle for all stuns (hits, blocks and general stuns).
+	FTimerHandle stunTimerHandle;
 
 	// A reference to the other player.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player References")
@@ -99,7 +114,7 @@ protected:
 
 	// The direction the character is moving OR the direction the player is holding down (could also be neutral).
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
-	EDirectionalInput directionalInput;
+	ECharacterState characterState;
 
 	// Is the player currently able to move?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
