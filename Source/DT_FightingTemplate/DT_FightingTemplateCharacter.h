@@ -13,10 +13,13 @@ enum class ECharacterState : uint8
 	VE_RunningRight		UMETA(DisplayName = "RUNNING_RIGHT"),
 	VE_MovingLeft		UMETA(DisplayName = "MOVING_LEFT"),
 	VE_RunningLeft		UMETA(DisplayName = "RUNNING_LEFT"),
+	VE_RollingForward	UMETA(DisplayName = "ROLLING_FORWARD"),
+	VE_RollingBackward	UMETA(DisplayName = "ROLLING_BACKWARD"),
 	VE_Crouching		UMETA(DisplayName = "CROUCHING"),
 	VE_Jumping			UMETA(DisplayName = "JUMPING"),
 	VE_Stunned			UMETA(DisplayName = "STUNNED"),
-	VE_Blocking			UMETA(DisplayName = "BLOCKING")
+	VE_Blocking			UMETA(DisplayName = "BLOCKING"),
+	VE_Launched			UMETA(DisplayName = "LAUNCHED")
 };
 UCLASS(config=Game)
 class ADT_FightingTemplateCharacter : public ACharacter
@@ -96,7 +99,11 @@ protected:
 
 	// Damage the player!
 	UFUNCTION(BlueprintCallable)
-	void TakeDamage(float _damageAmount, float _hitstunTime, float _blockstunTime);
+	void TakeDamage(float _damageAmount, float _hitstunTime, float _blockstunTime, float _pushbackAmount);
+
+	// Determine the distance to push back a struck opponent.
+	UFUNCTION(BlueprintCallable)
+	void PerformPushback(float _pushbackAmount, bool _hasBlocked);
 
 	// Stun state begins!
 	void BeginStun();

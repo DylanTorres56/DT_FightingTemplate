@@ -51,6 +51,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	FVector hitboxLocation;
 
+	// The distance the player is pushed back.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
+	float pushbackDistance;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

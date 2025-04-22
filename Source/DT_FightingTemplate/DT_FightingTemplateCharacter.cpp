@@ -270,7 +270,7 @@ void ADT_FightingTemplateCharacter::ProxHitboxCollision()
 	}
 }
 
-void ADT_FightingTemplateCharacter::TakeDamage(float _damageAmount, float _hitstunTime, float _blockstunTime) 
+void ADT_FightingTemplateCharacter::TakeDamage(float _damageAmount, float _hitstunTime, float _blockstunTime, float _pushbackAmount)
 {
 	if (characterState != ECharacterState::VE_Blocking) 
 	{
@@ -287,8 +287,11 @@ void ADT_FightingTemplateCharacter::TakeDamage(float _damageAmount, float _hitst
 
 		if (otherPlayer) 
 		{
-			otherPlayer->hasLandedAttack = true;
+			otherPlayer->hasLandedAttack = true; 
+			otherPlayer->PerformPushback(_pushbackAmount, false);
 		}
+		
+		otherPlayer->PerformPushback(_pushbackAmount, false);
 
 		if (playerHealth <= 0.0f) 
 		{
@@ -310,6 +313,14 @@ void ADT_FightingTemplateCharacter::TakeDamage(float _damageAmount, float _hitst
 		{
 			characterState = ECharacterState::VE_Default;
 		}
+
+		if (otherPlayer) 
+		{
+			otherPlayer->hasLandedAttack = false;
+			otherPlayer->PerformPushback(_pushbackAmount, false);
+		}
+
+		otherPlayer->PerformPushback(_pushbackAmount, true);
 	}
 	
 }
@@ -324,6 +335,32 @@ void ADT_FightingTemplateCharacter::EndStun()
 {
 	characterState = ECharacterState::VE_Default;
 	canMove = true;
+}
+
+void ADT_FightingTemplateCharacter::PerformPushback(float _pushbackAmount, bool _hasBlocked)
+{
+	if (_hasBlocked) 
+	{
+		if (isFacingRight) 
+		{
+			LaunchCharacter(FVector(0.0f, -_pushbackAmount * 2.0f, 0.0f), false, false);
+		}
+		else 
+		{
+			LaunchCharacter(FVector(0.0f, _pushbackAmount * 2.0f, 0.0f), false, false);
+		}
+	}
+	else 
+	{
+		if (isFacingRight)
+		{
+			LaunchCharacter(FVector(0.0f, -_pushbackAmount, 0.0f), false, false);
+		}
+		else
+		{
+			LaunchCharacter(FVector(0.0f, _pushbackAmount, 0.0f), false, false);
+		}
+	}
 }
 
 // This is being called in tick FOR NOW. Go back and change it to when the player is grounded to allow for proper cross-ups!
