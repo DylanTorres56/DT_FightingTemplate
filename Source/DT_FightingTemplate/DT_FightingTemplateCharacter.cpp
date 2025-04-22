@@ -148,7 +148,7 @@ void ADT_FightingTemplateCharacter::MoveRight(float Value)
 	if(canMove && characterState != ECharacterState::VE_Crouching && characterState != ECharacterState::VE_Blocking)
 	{
 
-		UE_LOG(LogTemp, Warning, TEXT("The directional value is: %f"), Value);
+		// UE_LOG(LogTemp, Warning, TEXT("The directional value is: %f"), Value);
 		
 		if (characterState != ECharacterState::VE_Jumping)
 		{		
