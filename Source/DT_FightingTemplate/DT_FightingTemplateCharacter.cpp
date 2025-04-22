@@ -124,16 +124,28 @@ void ADT_FightingTemplateCharacter::Landed(const FHitResult& Hit)
 void ADT_FightingTemplateCharacter::StartCrouching()
 {
 	isCrouching = true;
+	characterState = ECharacterState::VE_Crouching;
 }
 
 void ADT_FightingTemplateCharacter::StopCrouching()
 {
 	isCrouching = false;
+	characterState = ECharacterState::VE_Default;
+}
+
+void ADT_FightingTemplateCharacter::StartBlocking()
+{
+	characterState = ECharacterState::VE_Blocking;
+}
+
+void ADT_FightingTemplateCharacter::StopBlocking()
+{
+	characterState = ECharacterState::VE_Default;
 }
 
 void ADT_FightingTemplateCharacter::MoveRight(float Value)
 {
-	if(canMove && !isCrouching)
+	if(canMove && characterState != ECharacterState::VE_Crouching && characterState != ECharacterState::VE_Blocking)
 	{
 
 		UE_LOG(LogTemp, Warning, TEXT("The directional value is: %f"), Value);
@@ -249,36 +261,69 @@ void ADT_FightingTemplateCharacter::P2_MoveRight(float _value)
 	MoveRight(_value);
 }
 
-void ADT_FightingTemplateCharacter::TakeDamage(float _damageAmount, float _hitstunTime) 
+void ADT_FightingTemplateCharacter::ProxHitboxCollision() 
 {
-	UE_LOG(LogTemp, Warning, TEXT("We are taking damage for %f points."), _damageAmount);
-	playerHealth -= _damageAmount;
+	if ((characterState == ECharacterState::VE_MovingLeft && isFacingRight) || (characterState == ECharacterState::VE_MovingRight && !isFacingRight))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Player is blocking!"));
+		characterState = ECharacterState::VE_Blocking;
+	}
+}
+
+void ADT_FightingTemplateCharacter::TakeDamage(float _damageAmount, float _hitstunTime, float _blockstunTime) 
+{
+	if (characterState != ECharacterState::VE_Blocking) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("We are taking damage for %f points."), _damageAmount);
+		playerHealth -= _damageAmount;
 	
-	characterState = ECharacterState::VE_Stunned;
-	stunTime = _hitstunTime;
-	BeginStun();
+		stunTime = _hitstunTime;
 
-	if (otherPlayer) 
-	{
-		otherPlayer->hasLandedAttack = false;
-	}
+		if (stunTime > 0.0f)
+		{
+			characterState = ECharacterState::VE_Stunned;
+			BeginStun();
+		}
 
-	if (playerHealth <= 0.0f) 
-	{
-		playerHealth = 0.0f;
+		if (otherPlayer) 
+		{
+			otherPlayer->hasLandedAttack = true;
+		}
+
+		if (playerHealth <= 0.0f) 
+		{
+			playerHealth = 0.0f;
+		}
 	}
+	else 
+	{
+		float reducedDamage = _damageAmount * 0.5f;
+		UE_LOG(LogTemp, Warning, TEXT("We are taking chip damage for %f points."), reducedDamage);
+		playerHealth -= reducedDamage;
+
+		stunTime = _blockstunTime;
+		if (stunTime >  0.0f)
+		{
+			BeginStun();
+		}
+		else 
+		{
+			characterState = ECharacterState::VE_Default;
+		}
+	}
+	
 }
 
 void ADT_FightingTemplateCharacter::BeginStun() 
 {
-	canMove = true;
+	canMove = false;
 	GetWorld()->GetTimerManager().SetTimer(stunTimerHandle, this, &ADT_FightingTemplateCharacter::EndStun, stunTime, false);
 }
 
 void ADT_FightingTemplateCharacter::EndStun()
 {
 	characterState = ECharacterState::VE_Default;
-	canMove = false;
+	canMove = true;
 }
 
 // This is being called in tick FOR NOW. Go back and change it to when the player is grounded to allow for proper cross-ups!

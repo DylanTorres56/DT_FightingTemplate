@@ -10,7 +10,10 @@ enum class ECharacterState : uint8
 {
 	VE_Default			UMETA(DisplayName = "NEUTRAL"),
 	VE_MovingRight		UMETA(DisplayName = "MOVING_RIGHT"),
+	VE_RunningRight		UMETA(DisplayName = "RUNNING_RIGHT"),
 	VE_MovingLeft		UMETA(DisplayName = "MOVING_LEFT"),
+	VE_RunningLeft		UMETA(DisplayName = "RUNNING_LEFT"),
+	VE_Crouching		UMETA(DisplayName = "CROUCHING"),
 	VE_Jumping			UMETA(DisplayName = "JUMPING"),
 	VE_Stunned			UMETA(DisplayName = "STUNNED"),
 	VE_Blocking			UMETA(DisplayName = "BLOCKING")
@@ -93,13 +96,25 @@ protected:
 
 	// Damage the player!
 	UFUNCTION(BlueprintCallable)
-	void TakeDamage(float _damageAmount, float _stunTime);
+	void TakeDamage(float _damageAmount, float _hitstunTime, float _blockstunTime);
 
 	// Stun state begins!
 	void BeginStun();
 
 	// Stun state ends!
 	void EndStun();
+
+	// Has the player collided with a prox hitbox?
+	UFUNCTION(BlueprintCallable)
+	void ProxHitboxCollision();
+
+	// Begin blocking!
+	UFUNCTION(BlueprintCallable)
+	void StartBlocking();
+
+	// End blocking!
+	UFUNCTION(BlueprintCallable)
+	void StopBlocking();
 
 	// The amount of time a character is stunned for.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
