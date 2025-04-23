@@ -105,6 +105,10 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void PerformPushback(float _pushbackAmount, float _launchAmount, bool _hasBlocked);
 
+	// Change the player's mat when damaged!
+	UFUNCTION(BlueprintImplementableEvent)
+	void ChangetoDamagedMat();
+
 	// Stun state begins!
 	void BeginStun();
 
@@ -165,6 +169,10 @@ protected:
 	// Has the player pressed D (Heavy Kick)?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks")
 	bool attackD_Used;
+
+	// The max amount of health the player can have.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	float playerMaxHP;
 
 	// The amount of health the player currently has.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")

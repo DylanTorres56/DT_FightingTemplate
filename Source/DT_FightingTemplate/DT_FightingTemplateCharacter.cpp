@@ -39,7 +39,8 @@ ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 	attackD_Used = false;
 	stunTime = 0.0f;
 	gravityScale = GetCharacterMovement()->GravityScale;
-	playerHealth = 1.00f;
+	playerMaxHP = 1.00f;
+	playerHealth = playerMaxHP;
 	maxDistanceApart = 800.0f;
 	isFacingRight = false;
 	hasLandedAttack = false;
@@ -301,6 +302,10 @@ void ADT_FightingTemplateCharacter::TakeDamage(float _damageAmount, float _hitst
 		if (playerHealth <= 0.0f) 
 		{
 			playerHealth = 0.0f;
+		}
+		else if (playerHealth > 0.0f && playerHealth < (playerMaxHP * 0.5f)) 
+		{
+			ChangetoDamagedMat();
 		}
 	}
 	else 
