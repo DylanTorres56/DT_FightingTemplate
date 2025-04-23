@@ -99,11 +99,11 @@ protected:
 
 	// Damage the player!
 	UFUNCTION(BlueprintCallable)
-	void TakeDamage(float _damageAmount, float _hitstunTime, float _blockstunTime, float _pushbackAmount);
+	void TakeDamage(float _damageAmount, float _hitstunTime, float _blockstunTime, float _pushbackAmount, float _launchAmount);
 
 	// Determine the distance to push back a struck opponent.
 	UFUNCTION(BlueprintCallable)
-	void PerformPushback(float _pushbackAmount, bool _hasBlocked);
+	void PerformPushback(float _pushbackAmount, float _launchAmount, bool _hasBlocked);
 
 	// Stun state begins!
 	void BeginStun();
@@ -145,6 +145,10 @@ protected:
 	// Is the player currently crouching?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	bool isCrouching;
+
+	// The scale of gravity on a launched player.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float gravityScale;
 
 	// Has the player pressed A (Light Punch)?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks")

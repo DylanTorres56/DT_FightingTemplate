@@ -38,6 +38,7 @@ ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 	attackC_Used = false;
 	attackD_Used = false;
 	stunTime = 0.0f;
+	gravityScale = GetCharacterMovement()->GravityScale;
 	playerHealth = 1.00f;
 	maxDistanceApart = 800.0f;
 	isFacingRight = false;
@@ -117,8 +118,12 @@ void ADT_FightingTemplateCharacter::StopJumping()
 
 void ADT_FightingTemplateCharacter::Landed(const FHitResult& Hit) 
 {
-	ACharacter::Landed(Hit);
-	characterState = ECharacterState::VE_Default;
+	// ACharacter::Landed(Hit);
+	if (characterState == ECharacterState::VE_Launched || characterState == ECharacterState::VE_Jumping) 
+	{
+		GetCharacterMovement()->GravityScale = gravityScale;
+		characterState = ECharacterState::VE_Default;
+	}
 }
 
 void ADT_FightingTemplateCharacter::StartCrouching()
@@ -150,7 +155,7 @@ void ADT_FightingTemplateCharacter::MoveRight(float Value)
 
 		// UE_LOG(LogTemp, Warning, TEXT("The directional value is: %f"), Value);
 		
-		if (characterState != ECharacterState::VE_Jumping)
+		if (characterState != ECharacterState::VE_Jumping && characterState != ECharacterState::VE_Launched)
 		{		
 			if (Value > 0.20f) 
 			{
@@ -270,7 +275,7 @@ void ADT_FightingTemplateCharacter::ProxHitboxCollision()
 	}
 }
 
-void ADT_FightingTemplateCharacter::TakeDamage(float _damageAmount, float _hitstunTime, float _blockstunTime, float _pushbackAmount)
+void ADT_FightingTemplateCharacter::TakeDamage(float _damageAmount, float _hitstunTime, float _blockstunTime, float _pushbackAmount, float _launchAmount)
 {
 	if (characterState != ECharacterState::VE_Blocking) 
 	{
@@ -288,10 +293,10 @@ void ADT_FightingTemplateCharacter::TakeDamage(float _damageAmount, float _hitst
 		if (otherPlayer) 
 		{
 			otherPlayer->hasLandedAttack = true; 
-			otherPlayer->PerformPushback(_pushbackAmount, false);
+			otherPlayer->PerformPushback(_pushbackAmount, 0.0f, false);
 		}
 		
-		otherPlayer->PerformPushback(_pushbackAmount, false);
+		PerformPushback(_pushbackAmount, _launchAmount, false);
 
 		if (playerHealth <= 0.0f) 
 		{
@@ -317,10 +322,10 @@ void ADT_FightingTemplateCharacter::TakeDamage(float _damageAmount, float _hitst
 		if (otherPlayer) 
 		{
 			otherPlayer->hasLandedAttack = false;
-			otherPlayer->PerformPushback(_pushbackAmount, false);
+			otherPlayer->PerformPushback(_pushbackAmount, 0.0f, false);
 		}
 
-		otherPlayer->PerformPushback(_pushbackAmount, true);
+		PerformPushback(_pushbackAmount, _launchAmount, true);
 	}
 	
 }
@@ -333,11 +338,14 @@ void ADT_FightingTemplateCharacter::BeginStun()
 
 void ADT_FightingTemplateCharacter::EndStun()
 {
-	characterState = ECharacterState::VE_Default;
+	if (characterState != ECharacterState::VE_Launched)
+	{
+		characterState = ECharacterState::VE_Default;
+	}
 	canMove = true;
 }
 
-void ADT_FightingTemplateCharacter::PerformPushback(float _pushbackAmount, bool _hasBlocked)
+void ADT_FightingTemplateCharacter::PerformPushback(float _pushbackAmount, float _launchAmount, bool _hasBlocked)
 {
 	if (_hasBlocked) 
 	{
@@ -352,13 +360,19 @@ void ADT_FightingTemplateCharacter::PerformPushback(float _pushbackAmount, bool 
 	}
 	else 
 	{
+		if (_launchAmount > 0.0f) 
+		{
+			GetCharacterMovement()->GravityScale *= 0.7f;
+			characterState = ECharacterState::VE_Launched;
+		}
+
 		if (isFacingRight)
 		{
-			LaunchCharacter(FVector(0.0f, -_pushbackAmount, 0.0f), false, false);
+			LaunchCharacter(FVector(0.0f, -_pushbackAmount, _launchAmount), false, false);
 		}
 		else
 		{
-			LaunchCharacter(FVector(0.0f, _pushbackAmount, 0.0f), false, false);
+			LaunchCharacter(FVector(0.0f, _pushbackAmount, _launchAmount), false, false);
 		}
 	}
 }

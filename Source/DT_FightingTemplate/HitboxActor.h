@@ -55,6 +55,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	float pushbackDistance;
 
+	// The distance the player is launched.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
+	float launchDistance;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
