@@ -38,6 +38,7 @@ class ADT_FightingTemplateCharacter : public ACharacter
 	void StartAttackB();
 	void StartAttackC();
 	void StartAttackD();
+	void StartAttackTestEX();
 
 	// When in Keyboard-Only mode, use these functions to control P2.
 	UFUNCTION(BlueprintCallable)
@@ -51,6 +52,9 @@ class ADT_FightingTemplateCharacter : public ACharacter
 
 	UFUNCTION(BlueprintCallable)
 	void P2_StartAttackD();
+
+	UFUNCTION(BlueprintCallable)
+	void P2_StartAttackTestEX();
 
 	UFUNCTION(BlueprintCallable)
 	void P2_Jump();
@@ -107,7 +111,7 @@ protected:
 
 	// Change the player's mat when damaged!
 	UFUNCTION(BlueprintImplementableEvent)
-	void ChangetoDamagedMat();
+	void ChangeToDamagedMat();
 
 	// Stun state begins!
 	void BeginStun();
@@ -169,6 +173,22 @@ protected:
 	// Has the player pressed D (Heavy Kick)?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks")
 	bool attackD_Used;
+
+	// Has the player pressed the Test EX attack?
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks")
+	bool attackTestEX_Used;
+
+	// Has the player pressed the Super Attack?
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks")
+	bool superUsed;
+
+	// The amount of Super Meter the player currently has.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Super Meter")
+	float superMeterAmount;
+
+	// Update material to meter burned color!
+	UFUNCTION(BlueprintImplementableEvent)
+	void ApplyMeterBurnMat();
 
 	// The max amount of health the player can have.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")

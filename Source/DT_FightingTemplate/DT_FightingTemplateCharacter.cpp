@@ -37,8 +37,11 @@ ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 	attackB_Used = false;
 	attackC_Used = false;
 	attackD_Used = false;
+	attackTestEX_Used = false;
+	superUsed = false;
 	stunTime = 0.0f;
 	gravityScale = GetCharacterMovement()->GravityScale;
+	superMeterAmount = 0.0f;
 	playerMaxHP = 1.00f;
 	playerHealth = playerMaxHP;
 	maxDistanceApart = 800.0f;
@@ -78,6 +81,8 @@ void ADT_FightingTemplateCharacter::SetupPlayerInputComponent(class UInputCompon
 
 			PlayerInputComponent->BindTouch(IE_Pressed, this, &ADT_FightingTemplateCharacter::TouchStarted);
 			PlayerInputComponent->BindTouch(IE_Released, this, &ADT_FightingTemplateCharacter::TouchStopped);
+
+			PlayerInputComponent->BindAction("P1_EX-Test", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartAttackTestEX);
 		}
 		else
 		{
@@ -101,6 +106,8 @@ void ADT_FightingTemplateCharacter::SetupPlayerInputComponent(class UInputCompon
 
 			PlayerInputComponent->BindTouch(IE_Pressed, this, &ADT_FightingTemplateCharacter::TouchStarted);
 			PlayerInputComponent->BindTouch(IE_Released, this, &ADT_FightingTemplateCharacter::TouchStopped);
+
+			PlayerInputComponent->BindAction("P2_EX-Test", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartAttackTestEX);
 		}
 	}
 	
@@ -226,6 +233,27 @@ void ADT_FightingTemplateCharacter::StartAttackD()
 	attackD_Used = true;
 }
 
+void ADT_FightingTemplateCharacter::StartAttackTestEX() 
+{
+	UE_LOG(LogTemp, Warning, TEXT("Test EX Attack called!"));
+	if (superMeterAmount >= .25f) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("25 Super Meter burned for an EX Attack!"));
+		attackTestEX_Used = true;
+		superMeterAmount -= .25f;
+		ApplyMeterBurnMat();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Not enough Super Meter for this move!"));
+	}
+
+	if (superMeterAmount < 0.0f)
+	{
+		superMeterAmount = 0.0f;
+	}
+}
+
 // P2 Functions (On Keyboard!)
 
 void ADT_FightingTemplateCharacter::P2_StartAttackA()
@@ -250,6 +278,12 @@ void ADT_FightingTemplateCharacter::P2_StartAttackD()
 {
 	// UE_LOG(LogTemp, Warning, TEXT("Attack D called!"));	
 	StartAttackD();
+}
+
+void ADT_FightingTemplateCharacter::P2_StartAttackTestEX()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Test EX Attack called!"));
+	StartAttackTestEX();
 }
 
 void ADT_FightingTemplateCharacter::P2_Jump()
@@ -282,7 +316,8 @@ void ADT_FightingTemplateCharacter::TakeDamage(float _damageAmount, float _hitst
 	{
 		UE_LOG(LogTemp, Warning, TEXT("We are taking damage for %f points."), _damageAmount);
 		playerHealth -= _damageAmount;
-	
+		superMeterAmount += _damageAmount * 0.85f;
+
 		stunTime = _hitstunTime;
 
 		if (stunTime > 0.0f)
@@ -295,6 +330,11 @@ void ADT_FightingTemplateCharacter::TakeDamage(float _damageAmount, float _hitst
 		{
 			otherPlayer->hasLandedAttack = true; 
 			otherPlayer->PerformPushback(_pushbackAmount, 0.0f, false);
+
+			if (!otherPlayer->attackTestEX_Used) // If the opponent ISN'T using a Test EX, they gain less meter on hit.
+			{
+				otherPlayer->superMeterAmount += _damageAmount * 0.3f;
+			}
 		}
 		
 		PerformPushback(_pushbackAmount, _launchAmount, false);
@@ -305,7 +345,7 @@ void ADT_FightingTemplateCharacter::TakeDamage(float _damageAmount, float _hitst
 		}
 		else if (playerHealth > 0.0f && playerHealth < (playerMaxHP * 0.5f)) 
 		{
-			ChangetoDamagedMat();
+			ChangeToDamagedMat();
 		}
 	}
 	else 
