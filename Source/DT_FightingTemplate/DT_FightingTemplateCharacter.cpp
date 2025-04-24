@@ -37,6 +37,7 @@ ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 	attackB_Used = false;
 	attackC_Used = false;
 	attackD_Used = false;
+	canUseExAttack = true;
 	attackTestEX_Used = false;
 	superUsed = false;
 	stunTime = 0.0f;
@@ -236,7 +237,7 @@ void ADT_FightingTemplateCharacter::StartAttackD()
 void ADT_FightingTemplateCharacter::StartAttackTestEX() 
 {
 	UE_LOG(LogTemp, Warning, TEXT("Test EX Attack called!"));
-	if (superMeterAmount >= .25f) 
+	if (superMeterAmount >= .25f && canUseExAttack) 
 	{
 		UE_LOG(LogTemp, Warning, TEXT("25 Super Meter burned for an EX Attack!"));
 		attackTestEX_Used = true;

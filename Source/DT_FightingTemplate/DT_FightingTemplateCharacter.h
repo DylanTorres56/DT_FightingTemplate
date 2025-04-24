@@ -174,6 +174,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks")
 	bool attackD_Used;
 
+	// Is the player able to use an EX attack?
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks")
+	bool canUseExAttack;
+
 	// Has the player pressed the Test EX attack?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks")
 	bool attackTestEX_Used;
