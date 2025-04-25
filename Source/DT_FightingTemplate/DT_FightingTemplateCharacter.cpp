@@ -33,6 +33,7 @@ ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 	characterState = ECharacterState::VE_Default;
 	transform = FTransform();
 	scale = FVector(0.0f, 0.0f, 0.0f);
+
 	attackA_Used = false;
 	attackB_Used = false;
 	attackC_Used = false;
@@ -40,6 +41,9 @@ ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 	canUseExAttack = true;
 	attackTestEX_Used = false;
 	superUsed = false;
+	
+	removeInputFromBufferTime = 1.4f;
+
 	stunTime = 0.0f;
 	gravityScale = GetCharacterMovement()->GravityScale;
 	superMeterAmount = 0.0f;
@@ -85,6 +89,9 @@ void ADT_FightingTemplateCharacter::SetupPlayerInputComponent(class UInputCompon
 
 			PlayerInputComponent->BindAction("P1_EX-Test", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartAttackTestEX);
 			PlayerInputComponent->BindAction("P1_Super-Test", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartSuperAttack);
+
+			// This assumes LSP's inputs are filtered to controls they can use.
+			// PlayerInputComponent->BindAction("AddToInputBuffer", IE_Pressed, this, &ADT_FightingTemplateCharacter::AddInputToInputBuffer);
 		}
 		else
 		{
@@ -111,6 +118,9 @@ void ADT_FightingTemplateCharacter::SetupPlayerInputComponent(class UInputCompon
 
 			PlayerInputComponent->BindAction("P2_EX-Test", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartAttackTestEX);
 			PlayerInputComponent->BindAction("P2_Super-Test", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartSuperAttack);
+
+			// This assumes RSP's inputs are filtered to controls they can use.
+			// PlayerInputComponent->BindAction("AddToInputBuffer", IE_Pressed, this, &ADT_FightingTemplateCharacter::AddInputToInputBuffer);
 		}
 	}
 	
@@ -275,6 +285,17 @@ void ADT_FightingTemplateCharacter::StartSuperAttack()
 	{
 		superMeterAmount = 0.0f;
 	}
+}
+
+void ADT_FightingTemplateCharacter::AddInputToBuffer(FInputInfo _inputInfo)
+{
+	inputBuffer.Add(_inputInfo);
+	// GetWorld()->GetTimerManager().SetTimer(inputBufferTimerHandle, this, &ADTFightingTemplateCharacter::RemoveInputFromInputBuffer, removeInputFromBufferTime, false);
+}
+
+void ADT_FightingTemplateCharacter::RemoveInputFromBuffer()
+{
+
 }
 
 // P2 Functions (On Keyboard!)

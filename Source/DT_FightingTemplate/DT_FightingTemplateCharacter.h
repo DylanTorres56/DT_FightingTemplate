@@ -21,6 +21,21 @@ enum class ECharacterState : uint8
 	VE_Blocking			UMETA(DisplayName = "BLOCKING"),
 	VE_Launched			UMETA(DisplayName = "LAUNCHED")
 };
+
+USTRUCT(BlueprintType)
+struct FInputInfo
+{
+	GENERATED_BODY();
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
+	FString inputName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
+	float timeStamp;
+};
+
+
 UCLASS(config=Game)
 class ADT_FightingTemplateCharacter : public ACharacter
 {
@@ -122,6 +137,18 @@ protected:
 	// Stun state ends!
 	void EndStun();
 
+	// Add inputs to the input buffer.
+	UFUNCTION(BlueprintCallable)
+	void AddInputToBuffer(FInputInfo _inputInfo);
+
+	// Remove inputs from the input buffer.
+	UFUNCTION(BlueprintCallable)
+	void RemoveInputFromBuffer();
+
+	// The array of inputs the player controlling this character has performed.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
+	TArray<FInputInfo> inputBuffer;
+
 	// Has the player collided with a prox hitbox?
 	UFUNCTION(BlueprintCallable)
 	void ProxHitboxCollision();
@@ -140,6 +167,12 @@ protected:
 
 	// The timer handle for all stuns (hits, blocks and general stuns).
 	FTimerHandle stunTimerHandle;
+
+	// The timer handle for all stuns (hits, blocks and general stuns).
+	FTimerHandle inputBufferTimerHandle;
+
+	// The amount of time before inputs are removed from the buffer.
+	float removeInputFromBufferTime;
 
 	// A reference to the other player.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player References")
