@@ -46,6 +46,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
 	TArray<FString> inputs;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
+	bool hasUsedCommand;
 };
 
 UCLASS(config=Game)
@@ -165,12 +168,13 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void StartCommand(FString _commandName);
 
-	// Commands to be called when a correct series of inputs are pressed.
-	FCommand tempCommand;
-
 	// The array of inputs the player controlling this character has performed.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
 	TArray<FInputInfo> inputBuffer;
+
+	// The array of commands to be used when the correct inputs are performed.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
+	TArray<FCommand> characterCommands;
 
 	// Has the player collided with a prox hitbox?
 	UFUNCTION(BlueprintCallable)
@@ -280,10 +284,6 @@ protected:
 	// Has the player's last attack connected?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks")
 	bool hasLandedAttack;
-
-	// Has the player performed a temp command?
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Commands")
-	bool hasUsedTempCommand;
 
 	// Does this device support multiple players at once?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Controller")
