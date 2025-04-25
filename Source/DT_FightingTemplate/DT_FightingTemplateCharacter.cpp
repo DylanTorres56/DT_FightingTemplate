@@ -44,6 +44,12 @@ ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 	
 	removeInputFromBufferTime = 1.4f;
 
+	tempCommand.name = "Temp Command";
+	tempCommand.inputs.Add("U");
+	tempCommand.inputs.Add("O");
+	tempCommand.inputs.Add("U");
+	hasUsedTempCommand = false;
+
 	stunTime = 0.0f;
 	gravityScale = GetCharacterMovement()->GravityScale;
 	superMeterAmount = 0.0f;
@@ -91,7 +97,7 @@ void ADT_FightingTemplateCharacter::SetupPlayerInputComponent(class UInputCompon
 			PlayerInputComponent->BindAction("P1_Super-Test", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartSuperAttack);
 
 			// This assumes LSP's inputs are filtered to controls they can use.
-			// PlayerInputComponent->BindAction("AddToInputBuffer", IE_Pressed, this, &ADT_FightingTemplateCharacter::AddInputToInputBuffer);
+			// PlayerInputComponent->BindAction("P1_AddToInputBuffer", IE_Pressed, this, &ADT_FightingTemplateCharacter::AddInputToInputBuffer);
 		}
 		else
 		{
@@ -120,7 +126,7 @@ void ADT_FightingTemplateCharacter::SetupPlayerInputComponent(class UInputCompon
 			PlayerInputComponent->BindAction("P2_Super-Test", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartSuperAttack);
 
 			// This assumes RSP's inputs are filtered to controls they can use.
-			// PlayerInputComponent->BindAction("AddToInputBuffer", IE_Pressed, this, &ADT_FightingTemplateCharacter::AddInputToInputBuffer);
+			// PlayerInputComponent->BindAction("P2_AddToInputBuffer", IE_Pressed, this, &ADT_FightingTemplateCharacter::AddInputToInputBuffer);
 		}
 	}
 	
@@ -290,12 +296,60 @@ void ADT_FightingTemplateCharacter::StartSuperAttack()
 void ADT_FightingTemplateCharacter::AddInputToBuffer(FInputInfo _inputInfo)
 {
 	inputBuffer.Add(_inputInfo);
+	CheckInputBufferForCommand();
 	// GetWorld()->GetTimerManager().SetTimer(inputBufferTimerHandle, this, &ADTFightingTemplateCharacter::RemoveInputFromInputBuffer, removeInputFromBufferTime, false);
 }
 
 void ADT_FightingTemplateCharacter::RemoveInputFromBuffer()
 {
 
+}
+
+void ADT_FightingTemplateCharacter::CheckInputBufferForCommand() 
+{
+	int correctSequenceCounter = 0;
+
+	for (int commandInput = 0; commandInput < tempCommand.inputs.Num(); ++commandInput) 
+	{
+		for (int i = 0; i < inputBuffer.Num(); ++i) 
+		{
+			if (i + correctSequenceCounter < inputBuffer.Num())
+			{
+				if (inputBuffer[i + correctSequenceCounter].inputName.Compare(tempCommand.inputs[commandInput]) == 0)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("The player has added another input to the command buffer!"));
+					++correctSequenceCounter;
+
+					if (correctSequenceCounter == tempCommand.inputs.Num()) 
+					{
+						StartCommand(tempCommand.name);
+					}
+
+					break;
+
+				}
+				else 
+				{
+					UE_LOG(LogTemp, Warning, TEXT("The player has broken sequence."));
+					correctSequenceCounter = 0;
+				}
+			}
+			else 
+			{
+				UE_LOG(LogTemp, Warning, TEXT("The player is not finished with the sequence yet."));
+				correctSequenceCounter = 0;
+			}
+		}
+	}
+}
+
+void ADT_FightingTemplateCharacter::StartCommand(FString _commandName) 
+{
+	if (_commandName.Compare(tempCommand.name) == 0) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("The player is using the command: %s."), *_commandName);
+		hasUsedTempCommand = true;
+	}
 }
 
 // P2 Functions (On Keyboard!)

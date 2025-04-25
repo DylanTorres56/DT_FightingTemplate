@@ -35,6 +35,18 @@ public:
 	float timeStamp;
 };
 
+USTRUCT(BlueprintType)
+struct FCommand
+{
+	GENERATED_BODY();
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
+	FString name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
+	TArray<FString> inputs;
+};
 
 UCLASS(config=Game)
 class ADT_FightingTemplateCharacter : public ACharacter
@@ -144,6 +156,17 @@ protected:
 	// Remove inputs from the input buffer.
 	UFUNCTION(BlueprintCallable)
 	void RemoveInputFromBuffer();
+
+	// Check the input buffer to detect if a player has performed a command move.
+	UFUNCTION(BlueprintCallable)
+	void CheckInputBufferForCommand();
+
+	// Make the character begin using a command based off its name.
+	UFUNCTION(BlueprintCallable)
+	void StartCommand(FString _commandName);
+
+	// Commands to be called when a correct series of inputs are pressed.
+	FCommand tempCommand;
 
 	// The array of inputs the player controlling this character has performed.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
@@ -257,6 +280,10 @@ protected:
 	// Has the player's last attack connected?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attacks")
 	bool hasLandedAttack;
+
+	// Has the player performed a temp command?
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Commands")
+	bool hasUsedTempCommand;
 
 	// Does this device support multiple players at once?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Controller")
