@@ -67,6 +67,7 @@ ADT_FightingTemplateCharacter::ADT_FightingTemplateCharacter()
 	maxDistanceApart = 800.0f;
 	isFacingRight = false;
 	hasLandedAttack = false;
+	hasReleasedAxisInput = true;
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
@@ -145,6 +146,7 @@ void ADT_FightingTemplateCharacter::Jump()
 {
 	ACharacter::Jump();
 	characterState = ECharacterState::VE_Jumping;
+	AddInputIconToHistory(8);
 }
 
 void ADT_FightingTemplateCharacter::StopJumping()
@@ -166,12 +168,14 @@ void ADT_FightingTemplateCharacter::StartCrouching()
 {
 	isCrouching = true;
 	characterState = ECharacterState::VE_Crouching;
+	AddInputIconToHistory(2);
 }
 
 void ADT_FightingTemplateCharacter::StopCrouching()
 {
 	isCrouching = false;
 	characterState = ECharacterState::VE_Default;
+	AddInputIconToHistory(5);
 }
 
 void ADT_FightingTemplateCharacter::StartBlocking()
@@ -196,14 +200,20 @@ void ADT_FightingTemplateCharacter::MoveRight(float Value)
 			if (Value > 0.20f) 
 			{
 				characterState = ECharacterState::VE_MovingRight;
+				AddInputIconToHistory(6, hasReleasedAxisInput);
+				hasReleasedAxisInput = false;
 			}
 			else if (Value < -0.20f)
 			{
 				characterState = ECharacterState::VE_MovingLeft;
+				AddInputIconToHistory(4, hasReleasedAxisInput);
+				hasReleasedAxisInput = false;
 			}
 			else 
 			{
 				characterState = ECharacterState::VE_Default;
+				AddInputIconToHistory(5, !hasReleasedAxisInput);
+				hasReleasedAxisInput = true;
 			}
 		}
 
@@ -241,24 +251,28 @@ void ADT_FightingTemplateCharacter::StartAttackA()
 {
 	// UE_LOG(LogTemp, Warning, TEXT("Attack A called!"));
 	attackA_Used = true;
+	AddInputIconToHistory(10);
 }
 
 void ADT_FightingTemplateCharacter::StartAttackB()
 {
 	// UE_LOG(LogTemp, Warning, TEXT("Attack B called!"));
 	attackB_Used = true;
+	AddInputIconToHistory(12);
 }
 
 void ADT_FightingTemplateCharacter::StartAttackC()
 {
 	// UE_LOG(LogTemp, Warning, TEXT("Attack C called!"));
 	attackC_Used = true;
+	AddInputIconToHistory(11);
 }
 
 void ADT_FightingTemplateCharacter::StartAttackD()
 {
 	// UE_LOG(LogTemp, Warning, TEXT("Attack D called!"));	
 	attackD_Used = true;
+	AddInputIconToHistory(13);
 }
 
 void ADT_FightingTemplateCharacter::StartAttackTestEX() 
@@ -280,6 +294,8 @@ void ADT_FightingTemplateCharacter::StartAttackTestEX()
 	{
 		superMeterAmount = 0.0f;
 	}
+
+	AddInputIconToHistory(0);
 }
 
 void ADT_FightingTemplateCharacter::StartSuperAttack()
@@ -300,6 +316,8 @@ void ADT_FightingTemplateCharacter::StartSuperAttack()
 	{
 		superMeterAmount = 0.0f;
 	}
+	
+	AddInputIconToHistory(14);
 }
 
 void ADT_FightingTemplateCharacter::AddInputToBuffer(FInputInfo _inputInfo)

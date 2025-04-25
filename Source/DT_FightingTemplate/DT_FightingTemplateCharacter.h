@@ -146,6 +146,10 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void ChangeToDamagedMat();
 
+	// Change the player's mat when damaged!
+	UFUNCTION(BlueprintImplementableEvent)
+	void AddInputIconToHistory(int _iconIndex, bool _shouldAddInput = true);
+
 	// Stun state begins!
 	void BeginStun();
 
@@ -167,6 +171,10 @@ protected:
 	// Make the character begin using a command based off its name.
 	UFUNCTION(BlueprintCallable)
 	void StartCommand(FString _commandName);
+
+	// Has the player released an axis input?
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
+	bool hasReleasedAxisInput;
 
 	// The array of inputs the player controlling this character has performed.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
