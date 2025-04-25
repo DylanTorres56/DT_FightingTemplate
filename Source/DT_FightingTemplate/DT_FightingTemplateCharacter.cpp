@@ -84,6 +84,7 @@ void ADT_FightingTemplateCharacter::SetupPlayerInputComponent(class UInputCompon
 			PlayerInputComponent->BindTouch(IE_Released, this, &ADT_FightingTemplateCharacter::TouchStopped);
 
 			PlayerInputComponent->BindAction("P1_EX-Test", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartAttackTestEX);
+			PlayerInputComponent->BindAction("P1_Super-Test", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartSuperAttack);
 		}
 		else
 		{
@@ -109,6 +110,7 @@ void ADT_FightingTemplateCharacter::SetupPlayerInputComponent(class UInputCompon
 			PlayerInputComponent->BindTouch(IE_Released, this, &ADT_FightingTemplateCharacter::TouchStopped);
 
 			PlayerInputComponent->BindAction("P2_EX-Test", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartAttackTestEX);
+			PlayerInputComponent->BindAction("P2_Super-Test", IE_Pressed, this, &ADT_FightingTemplateCharacter::StartSuperAttack);
 		}
 	}
 	
@@ -255,6 +257,26 @@ void ADT_FightingTemplateCharacter::StartAttackTestEX()
 	}
 }
 
+void ADT_FightingTemplateCharacter::StartSuperAttack()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Super Attack used!"));
+	if (superMeterAmount >= .75f) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("75 Super Meter burned for a Super Attack!"));
+		superUsed = true;
+		superMeterAmount -= .75f;
+	}
+	else 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Not enough Super Meter for this move!"));
+	}
+
+	if (superMeterAmount < 0.0f)
+	{
+		superMeterAmount = 0.0f;
+	}
+}
+
 // P2 Functions (On Keyboard!)
 
 void ADT_FightingTemplateCharacter::P2_StartAttackA()
@@ -283,8 +305,14 @@ void ADT_FightingTemplateCharacter::P2_StartAttackD()
 
 void ADT_FightingTemplateCharacter::P2_StartAttackTestEX()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Test EX Attack called!"));
+	// UE_LOG(LogTemp, Warning, TEXT("Test EX Attack called!"));
 	StartAttackTestEX();
+}
+
+void ADT_FightingTemplateCharacter::P2_StartSuperAttack()
+{
+	// UE_LOG(LogTemp, Warning, TEXT("Super Attack called!"));
+	StartSuperAttack();
 }
 
 void ADT_FightingTemplateCharacter::P2_Jump()

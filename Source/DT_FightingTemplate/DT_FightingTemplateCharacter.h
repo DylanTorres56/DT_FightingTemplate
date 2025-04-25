@@ -39,6 +39,7 @@ class ADT_FightingTemplateCharacter : public ACharacter
 	void StartAttackC();
 	void StartAttackD();
 	void StartAttackTestEX();
+	void StartSuperAttack();
 
 	// When in Keyboard-Only mode, use these functions to control P2.
 	UFUNCTION(BlueprintCallable)
@@ -57,6 +58,9 @@ class ADT_FightingTemplateCharacter : public ACharacter
 	void P2_StartAttackTestEX();
 
 	UFUNCTION(BlueprintCallable)
+	void P2_StartSuperAttack();
+
+	UFUNCTION(BlueprintCallable)
 	void P2_Jump();
 
 	UFUNCTION(BlueprintCallable)
@@ -64,7 +68,6 @@ class ADT_FightingTemplateCharacter : public ACharacter
 	
 	UFUNCTION(BlueprintCallable)
 	void P2_MoveRight(float _value);
-
 
 protected:
 
